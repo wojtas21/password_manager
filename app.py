@@ -18,4 +18,14 @@ def generate_password():
         print("4. Lowercase Letters")
         requirements = input("Select which requirements you want to password contain (sperate them by commas!):  ")
 
+        characters = ""
+        if "1" in requirements:
+            characters += string.punctation
+        if "2" in requirements
+            characters += string.digits
+        if "3" in requirements
+            characters +=  string.ascii_uppercase
+        if "4" in requirements:
+            characters += string.ascii_lowercase
+
 generate_password()
