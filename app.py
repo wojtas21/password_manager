@@ -1,5 +1,6 @@
 import random
 import string
+import os
 
 def generate_password():
     while True:
@@ -31,7 +32,15 @@ def generate_password():
             continue
 
         password = ''.join(random.choice(characters) for _ in range(length))
-        print(f"Generated password: {password}")
+        service = input("For which site would you like to save this password: ")
+        with open("passwords.txt", "a") as f:
+            f.write(f"{service}: {password}\n")
+        print(f"Generated password for {service}: {password}")
         return password
+
+def read_passwords():
+    with open("passwords.txt", "r") as f:
+        print(f.read())
+
 
 generate_password()
