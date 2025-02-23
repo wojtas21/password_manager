@@ -94,7 +94,10 @@ def delete_password():
         print("File 'passwords.json' doesn't exist.")
 
 
-    
+def login():
+    attempts = 3
+    while attempts > 0:
+        password = input("Enter master password:  ")
 
 
 
