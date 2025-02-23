@@ -142,7 +142,7 @@ def change_master_password():
         return
     
     new_password = input("Enter your new master password:  ")
-    new_hashed = bcrypt_hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
+    new_hashed = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
 
     with open("master_password.txt", "wb") as f:
         f.write(new_hashed)
