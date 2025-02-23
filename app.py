@@ -1,8 +1,49 @@
+from cryptography.fernet import Fernet
 import random
 import string
 import os
 import json
 import bcrypt
+
+
+def generate_key():
+    if not os.path.exists("key.key"):
+        key = Fernet.generate_key()
+        with open("key.key", "wb") as key_file:
+            key_file.write(key)
+
+def load_key():
+    with open("key.key", "rb") as key_file:
+        return key_file.read()
+
+
+def encrypt_data(data, key):
+    f = Fernet(key)
+    return f.encrypt(data.encode())
+
+def decrypt_data(data, key):
+    f = Fernet(key)
+    return f.decrypt(data).decode()
+
+
+def save_encrypted_passwords(passwords):
+    key = load_key()
+    encrypted_data = encrypt_data(json.dumps(passwords), key)
+    with open("passwords.json", "wb") as f:
+        f.write(encrypted_data)
+
+def load_encrypted_passwords():
+    if not os.path.exists("passwords.json"):
+        return {}
+    
+    key = load_key()
+    with open("passwords.json", "rb") as f:
+        encrypted_data = f.read()
+    try:
+        return json.loads(decrypt_data(encrypted_data, key))
+    except:
+        print("Error: Could not decrypt passwords. Wrong key?")
+        return {}
 
 
 def generate_password():
@@ -37,60 +78,41 @@ def generate_password():
         password = ''.join(random.choice(characters) for _ in range(length))
         service = input("For which site would you like to save this password: ")
 
-        if os.path.exists("passwords.json"):
-            with open("passwords.json", "r") as f:
-                passwords = json.load(f)
-        else:
-            passwords = {}
-
+        passwords = load_encrypted_passwords()
         passwords[service] = password
-
-        with open("passwords.json", "w") as f:
-            json.dump(passwords, f, indent=4)
+        save_encrypted_passwords(passwords)
 
         print(f"Generated password for {service}: {password}")
         return password
 
+
 def read_passwords():
-    if not os.path.exists("passwords.json"):
-        print("No passwords saved yet!")
-        return
-    
-    with open("passwords.json", "r") as f:
-        passwords = json.load(f)
-        if not passwords:
-            print("No passwords saved yet!")
-        else:
-            for service, password in passwords.items():
-                print(f"{service}: {password}")
+    passwords = load_encrypted_passwords()
+    if not passwords:
+        print("No saved passwords or decryption error.")
+    else:
+        for service, password in passwords.items():
+            print(f"{service}: {password}")
 
 
 def delete_password():
-    if os.path.exists("passwords.json"):
-        with open("passwords.json", "r") as f:
-            passwords = json.load(f)
+    passwords = load_encrypted_passwords()
+    if not passwords:
+        print("No saved passwords!")
+        return
+    
+    print("Saved passwords:")
+    for service in passwords:
+        print(f"- {service}")
 
-        if passwords:
-            print("Saved passwords:")
-            for service in passwords:
-                print(f"- {service}")
+    service_to_delete = input("Enter the service you want to delete the password for: ")
 
-            service_to_delete = input("Enter the service you want to delete the password for: ")
-
-            if service_to_delete in passwords:
-                del passwords[service_to_delete]
-                print(f"Password for {service_to_delete} deleted.")
-
-                with open("passwords.json", "w") as f:
-                    json.dump(passwords, f, indent=4)
-
-                print("Passwords updated successfully.")
-            else:
-                print(f"Service {service_to_delete} not found.")
-        else:
-            print("No passwords saved yet!")
+    if service_to_delete in passwords:
+        del passwords[service_to_delete]
+        save_encrypted_passwords(passwords)
+        print(f"Password for {service_to_delete} deleted.")
     else:
-        print("File 'passwords.json' doesn't exist.")
+        print(f"Service {service_to_delete} not found.")
 
 
 def login():
@@ -114,6 +136,7 @@ def login():
     
     print("Access Denied. Too many failed attempts.")
     return False
+
 
 def set_master_password():
     if os.path.exists("master_password.txt"):
@@ -150,6 +173,8 @@ def change_master_password():
 
 
 def menu():
+    generate_key()
+
     if not os.path.exists("master_password.txt"):
         set_master_password()
 
@@ -179,6 +204,5 @@ def menu():
             change_master_password()
         else:
             print("Invalid choice. Select a valid option (1/2/3/4).")
-
 
 menu()
