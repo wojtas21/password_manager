@@ -39,8 +39,16 @@ def generate_password():
         return password
 
 def read_passwords():
+    if not os.path.exists("passwords.txt"):
+        print("No passwords saved yet!")
+        return
+    
     with open("passwords.txt", "r") as f:
-        print(f.read())
+        content = f.read().strip()
+        if not content:
+            print("No passwords saved yet!")
+        else:
+            print(content)
 
 
 generate_password()
