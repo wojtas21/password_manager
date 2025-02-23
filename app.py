@@ -2,9 +2,8 @@ import random
 import string
 import os
 import json
+import bcrypt
 
-
-master_password = "1234"
 
 def generate_password():
     while True:
@@ -101,16 +100,33 @@ def login():
     attempts = 3
     while attempts > 0:
         password = input("Enter master password:  ")
-        if password == master_password:
-            print("Access granted.")
-            return True
-        else:
-            attempts -= 1
-            print(f"Wrong password. {attempts} attempts left. ")
+        
 
-    print("Access Denied. Too many failed attempts.") 
+        if os.path.exists("master_password.txt"):
+            with open("master_password.txt", "rb") as f:
+                stored_hash = f.read()
+            
+
+            if bcrypt.checkpw(password.encode('utf-8'), stored_hash):
+                print("Access granted.")
+                return True
+            else:
+                attempts -= 1
+                print(f"Wrong password. {attempts} attempts left.")
+        else:
+            print("No master password set. Please set one.")
+            break
+
+    print("Access Denied. Too many failed attempts.")
     return False
 
+def set_master_password():
+    password = input("Set master password:  ")
+    hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    
+    with open("master_password.txt", "wb") as f:
+        f.write(hashed)
+    print("Master password set successfully.")
 
 def menu():
     if not login():
