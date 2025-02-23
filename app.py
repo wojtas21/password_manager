@@ -107,8 +107,9 @@ def login():
         else:
             attempts -= 1
             print(f"Wrong password. {attempts} attempts left. ")
-        print("Access Denied. Too many failed attempts.")
-        return False
+
+    print("Access Denied. Too many failed attempts.") 
+    return False
 
 
 def menu():
