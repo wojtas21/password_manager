@@ -3,6 +3,9 @@ import string
 import os
 import json
 
+
+master_password = "1234"
+
 def generate_password():
     while True:
         length = input("Insert length of password: ")
@@ -98,10 +101,20 @@ def login():
     attempts = 3
     while attempts > 0:
         password = input("Enter master password:  ")
-
+        if password == master_password:
+            print("Access granted.")
+            return True
+        else:
+            attempts -= 1
+            print(f"Wrong password. {attempts} attempts left. ")
+        print("Access Denied. Too many failed attempts.")
+        return False
 
 
 def menu():
+    if not login():
+        return
+
     while True:
         print("\nPassword Manager")
         print("1. Generate a new password")
