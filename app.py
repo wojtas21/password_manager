@@ -1,6 +1,7 @@
 import random
 import string
 import os
+import json
 
 def generate_password():
     while True:
@@ -33,22 +34,32 @@ def generate_password():
 
         password = ''.join(random.choice(characters) for _ in range(length))
         service = input("For which site would you like to save this password: ")
-        with open("passwords.txt", "a") as f:
-            f.write(f"{service}: {password}\n")
+
+        if os.path.exists("passwords.json"):
+            with open("passwords.json", "r") as f:
+                passwords = json.load(f)
+        else:
+            passwords = {}
+
+        passwords[service] = password
+
+        with open("passwords.json", "w") as f:
+            json.dump(passwords, f, indent=4)
+
         print(f"Generated password for {service}: {password}")
         return password
 
 def read_passwords():
-    if not os.path.exists("passwords.txt"):
+    if not os.path.exists("passwords.json"):
         print("No passwords saved yet!")
         return
     
-    with open("passwords.txt", "r") as f:
-        content = f.read().strip()
-        if not content:
+    with open("passwords.json", "r") as f:
+        passwords = json.load(f)
+        if not passwords:
             print("No passwords saved yet!")
         else:
-            print(content)
-
+            for service, password in passwords.items():
+                print(f"{service}: {password}")
 
 generate_password()
