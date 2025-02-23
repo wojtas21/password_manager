@@ -18,7 +18,6 @@ def generate_password():
         print("3. Uppercase Letters")
         print("4. Lowercase Letters")
         requirements = input("Select which requirements you want the password to contain (separate them by commas!):  ")
-        
 
         characters = ""
 
@@ -70,7 +69,6 @@ def delete_password():
     if os.path.exists("passwords.json"):
         with open("passwords.json", "r") as f:
             passwords = json.load(f)
- 
 
         if passwords:
             print("Saved passwords:")
@@ -80,7 +78,6 @@ def delete_password():
             service_to_delete = input("Enter the service you want to delete the password for: ")
 
             if service_to_delete in passwords:
-
                 del passwords[service_to_delete]
                 print(f"Password for {service_to_delete} deleted.")
 
@@ -97,38 +94,44 @@ def delete_password():
 
 
 def login():
+    if not os.path.exists("master_password.txt"):
+        print("No master password set. Please set one.")
+        return False
+
     attempts = 3
     while attempts > 0:
-        password = input("Enter master password:  ")
-        
+        password = input("Enter master password: ")
 
-        if os.path.exists("master_password.txt"):
-            with open("master_password.txt", "rb") as f:
-                stored_hash = f.read()
-            
+        with open("master_password.txt", "rb") as f:
+            stored_hash = f.read()
 
-            if bcrypt.checkpw(password.encode('utf-8'), stored_hash):
-                print("Access granted.")
-                return True
-            else:
-                attempts -= 1
-                print(f"Wrong password. {attempts} attempts left.")
+        if bcrypt.checkpw(password.encode('utf-8'), stored_hash):
+            print("Access granted.")
+            return True
         else:
-            print("No master password set. Please set one.")
-            break
-
+            attempts -= 1
+            print(f"Wrong password. {attempts} attempts left.")
+    
     print("Access Denied. Too many failed attempts.")
     return False
 
 def set_master_password():
-    password = input("Set master password:  ")
+    if os.path.exists("master_password.txt"):
+        print("Master password is already set. You cannot set a new one.")
+        return
+
+    password = input("Set master password: ")
     hashed = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     
     with open("master_password.txt", "wb") as f:
         f.write(hashed)
     print("Master password set successfully.")
 
+
 def menu():
+    if not os.path.exists("master_password.txt"):
+        set_master_password()
+
     if not login():
         return
 
@@ -152,5 +155,6 @@ def menu():
             break
         else:
             print("Invalid choice. Select a valid option (1/2/3/4).")
+
 
 menu()
