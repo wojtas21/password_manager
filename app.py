@@ -128,6 +128,13 @@ def set_master_password():
     print("Master password set successfully.")
 
 
+def change_master_password():
+    if not os.path.exists("master_password.txt"):
+        print("No master password set. Please set one.")
+        return
+
+
+
 def menu():
     if not os.path.exists("master_password.txt"):
         set_master_password()
