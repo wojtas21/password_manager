@@ -68,12 +68,34 @@ def delete_password():
     if os.path.exists("passwords.json"):
         with open("passwords.json", "r") as f:
             passwords = json.load(f)
-        print(passwords) # test
+ 
+
+        if passwords:
+            print("Saved passwords:")
+            for service in passwords:
+                print(f"- {service}")
+
+            service_to_delete = input("Enter the service you want to delete the password for: ")
+
+            if service_to_delete in passwords:
+
+                del passwords[service_to_delete]
+                print(f"Password for {service_to_delete} deleted.")
+
+                with open("passwords.json", "w") as f:
+                    json.dump(passwords, f, indent=4)
+
+                print("Passwords updated successfully.")
+            else:
+                print(f"Service {service_to_delete} not found.")
+        else:
+            print("No passwords saved yet!")
     else:
         print("File 'passwords.json' doesn't exist.")
 
+
     
-    
+
 
 
 def menu():
