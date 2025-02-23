@@ -1,20 +1,25 @@
-🔑 Password Manager
+# 🔑 Password Manager  
 
-Password Manager is a simple and secure program for generating, storing, and managing passwords. All passwords are encrypted using Fernet (cryptography), and access to them is protected by a master password.
+**Password Manager** is a secure and simple tool for generating, storing, and managing passwords. All stored passwords are **encrypted using Fernet (cryptography)**, and access to them is protected by a **master password**.  
 
-📌 Features
+---
 
-✅ Secure access – requires a master password to unlock stored passwords.
-✅ Password generation – users can generate random passwords based on selected criteria.
-✅ Password encryption – all passwords are stored in passwords.json in an encrypted format.
-✅ View saved passwords – after entering the master password, users can view stored passwords.
-✅ Delete passwords – allows users to remove specific passwords from the database.
-✅ Change the master password – users can set a new master password at any time.
-✅ Search for saved passwords – users can find stored passwords based on service names.
+## 📌 Features  
 
-🛠️ Requirements
-	•	Python 3.x
-	•	Libraries: cryptography, bcrypt
+✅ **Secure access** – requires a **master password** to unlock stored passwords.  
+✅ **Password generation** – allows users to generate **random passwords** based on selected criteria.  
+✅ **Password encryption** – all stored passwords are **encrypted** for security.  
+✅ **View saved passwords** – users can view stored passwords after authentication.  
+✅ **Delete passwords** – users can remove specific passwords from the database.  
+✅ **Change the master password** – allows users to set a **new master password** at any time.  
+✅ **Search for saved passwords** – users can **search for stored passwords** by service name.  
 
-Install required libraries:
-    `pip install cryptography bcrypt`
+---
+
+## 🛠️ Requirements  
+
+- **Python 3.x**  
+- Required Libraries:  
+
+  ```bash
+  pip install cryptography bcrypt
