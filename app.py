@@ -16,6 +16,7 @@ def generate_password():
         print("3. Uppercase Letters")
         print("4. Lowercase Letters")
         requirements = input("Select which requirements you want the password to contain (separate them by commas!):  ")
+        
 
         characters = ""
 
@@ -62,4 +63,39 @@ def read_passwords():
             for service, password in passwords.items():
                 print(f"{service}: {password}")
 
-generate_password()
+
+def delete_password():
+    if os.path.exists("passwords.json"):
+        with open("passwords.json", "r") as f:
+            passwords = json.load(f)
+        print(passwords) # test
+    else:
+        print("File 'passwords.json' doesn't exist.")
+
+    
+    
+
+
+def menu():
+    while True:
+        print("\nPassword Manager")
+        print("1. Generate a new password")
+        print("2. Show saved passwords")
+        print("3. Delete a saved password")
+        print("4. Exit Program")
+        
+        choice = input("Choose an option (1/2/3/4):   ")
+
+        if choice == "1":
+            generate_password()
+        elif choice == "2":
+            read_passwords()
+        elif choice == "3":
+            delete_password()
+        elif choice == "4":
+            print("Exiting program")
+            break
+        else:
+            print("Invalid choice. Select a valid option (1/2/3/4).")
+
+menu()
