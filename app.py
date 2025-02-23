@@ -172,6 +172,22 @@ def change_master_password():
     print("Master password changed successfully!")
 
 
+def search_passwords():
+    passwords = load_encrypted_passwords()
+    if not passwords:
+        print("No saved passwords!")
+        return
+    
+    query = input("Enter service name to search: ").lower()
+    matching_passwords = {service: pwd for service, pwd in passwords.items() if query in service.lower()}
+
+    if matching_passwords:
+        print("Matching passwords:")
+        for service, password in matching_passwords.items():
+            print(f"{service}: {password}")
+    else:
+        print("No matching passwords found.")
+
 def menu():
     generate_key()
 
@@ -188,8 +204,9 @@ def menu():
         print("3. Delete a saved password")
         print("4. Exit Program")
         print("5. Change master password")
+        print("6. Search for a saved password")
         
-        choice = input("Choose an option (1/2/3/4/5):   ")
+        choice = input("Choose an option (1/2/3/4/5/6):   ")
 
         if choice == "1":
             generate_password()
@@ -202,6 +219,8 @@ def menu():
             break
         elif choice == "5":
             change_master_password()
+        elif choice == "6":
+            search_passwords()
         else:
             print("Invalid choice. Select a valid option (1/2/3/4).")
 
