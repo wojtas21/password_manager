@@ -132,7 +132,21 @@ def change_master_password():
     if not os.path.exists("master_password.txt"):
         print("No master password set. Please set one.")
         return
+    
+    password = input("Please enter your current master password:  ")
+    with open("master_password.txt", "rb") as f:
+        stored_hash = f.read()
+    
+    if not bcrypt.checkpw(password.encode('utf-8'), stored_hash):
+        print("Incorrect master password. Cannot change password.")
+        return
+    
+    new_password = input("Enter your new master password:  ")
+    new_hashed = bcrypt_hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
 
+    with open("master_password.txt", "wb") as f:
+        f.write(new_hashed)
+    print("Master password changed successfully!")
 
 
 def menu():
@@ -148,6 +162,7 @@ def menu():
         print("2. Show saved passwords")
         print("3. Delete a saved password")
         print("4. Exit Program")
+        print("5. Change master password")
         
         choice = input("Choose an option (1/2/3/4):   ")
 
@@ -160,6 +175,8 @@ def menu():
         elif choice == "4":
             print("Exiting program")
             break
+        elif choice == "5":
+            change_master_password()
         else:
             print("Invalid choice. Select a valid option (1/2/3/4).")
 
