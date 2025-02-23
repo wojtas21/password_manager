@@ -20,12 +20,14 @@ def generate_password():
 
         characters = ""
         if "1" in requirements:
-            characters += string.punctation
-        if "2" in requirements
+            characters += string.punctuation
+        if "2" in requirements:
             characters += string.digits
-        if "3" in requirements
+        if "3" in requirements:
             characters +=  string.ascii_uppercase
         if "4" in requirements:
             characters += string.ascii_lowercase
+
+        password = ''.join(random.choice(characters) for _ in range(length))
 
 generate_password()
