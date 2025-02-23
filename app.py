@@ -164,7 +164,7 @@ def menu():
         print("4. Exit Program")
         print("5. Change master password")
         
-        choice = input("Choose an option (1/2/3/4):   ")
+        choice = input("Choose an option (1/2/3/4/5):   ")
 
         if choice == "1":
             generate_password()
