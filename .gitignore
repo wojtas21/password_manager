@@ -3,4 +3,5 @@
 /__pycache__
 
 passwords.json
+master_password.txt
 passwords.txt
