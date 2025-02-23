@@ -172,21 +172,48 @@ def change_master_password():
     print("Master password changed successfully!")
 
 
-def search_passwords():
+def edit_existing_password():
     passwords = load_encrypted_passwords()
     if not passwords:
         print("No saved passwords!")
         return
-    
-    query = input("Enter service name to search: ").lower()
-    matching_passwords = {service: pwd for service, pwd in passwords.items() if query in service.lower()}
 
-    if matching_passwords:
-        print("Matching passwords:")
-        for service, password in matching_passwords.items():
-            print(f"{service}: {password}")
+    print("Saved services:")
+    services = list(passwords.keys())  
+    for index, service in enumerate(services, start=1):
+        print(f"{index}. {service}")
+
+    choice = input("Enter the number or name of the service you want to edit: ").strip()
+
+
+    if choice.isdigit():
+        choice = int(choice)
+        if 1 <= choice <= len(services):
+            service_name = services[choice - 1]  
+        else:
+            print("Invalid number selection.")
+            return
     else:
-        print("No matching passwords found.")
+
+        if choice in passwords:
+            service_name = choice
+        else:
+            print("Service not found.")
+            return
+
+
+    new_password = input(f"Enter new password for {service_name} (or leave empty to generate one): ").strip()
+    
+    if not new_password:
+        new_password = generate_password()
+
+
+    passwords[service_name] = new_password
+    save_encrypted_passwords(passwords)
+
+    print(f"Password for {service_name} updated successfully!")
+    
+
 
 def menu():
     generate_key()
